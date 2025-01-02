@@ -1,9 +1,10 @@
 import pandas as pd
-
+from lager import Lager
+from genetic import find_goat
 class Lastbil:
     
-    kapacitet = 800
-    DAGAR_TILL_DEADLINE = 1
+    kapacitet = float(800)
+    DAGAR_TILL_DEADLINE = -100
     
     def __init__(self):
         self.last = []
@@ -17,7 +18,7 @@ class Lastbil:
             if row['Deadline'] < self.DAGAR_TILL_DEADLINE:
                 första_prio.append((index, row['Deadline']))
             else:
-                p = row['Förtjänst'] / row['Vikt']
+                p = round((row['Förtjänst'] / row['Vikt']), 1)
                 resterande_paket.append((index, p))
                 
         första_prio = sorted(
@@ -34,12 +35,12 @@ class Lastbil:
     def lasta_bil_helper(self, list, lager: pd.DataFrame):
         for x in list:
             paket = lager.iloc[x[0]]
-            if self.vikt + paket['Vikt'] < self.kapacitet:
-                self.vikt += paket['Vikt']
-                self.förtjänst += paket['Förtjänst']
+            if self.vikt + round(paket['Vikt'], 1) < self.kapacitet:
+                self.vikt += round(paket['Vikt'], 1)
+                self.förtjänst += int(paket['Förtjänst'])
                 self.last.append(paket['Paket_id'])
     
-    def lasta_bil(self, lager: pd.DataFrame) -> pd.DataFrame:
+    def lasta_bil(self, lager: pd.DataFrame):
         första_prio, resterande_paket = self.lasta_bil_prioritering(lager)
     
         if första_prio:
@@ -51,3 +52,19 @@ class Lastbil:
             lager.drop(lager[lager['Paket_id'] == x].index, inplace = True)
         lager.reset_index(drop=True, inplace=True)
         return lager, self.förtjänst
+    
+    def lasta_bil_genetic(self, lager:Lager):
+        last_order = find_goat(lager)
+        paket_no = 0
+        for x in last_order:
+            if x == 1:
+                paket = lager.lagerstatus.iloc[paket_no]
+                self.vikt += round(paket['Vikt'], 1)
+                self.förtjänst += int(paket['Förtjänst'])
+                self.last.append(paket['Paket_id'])
+            paket_no += 1
+        for x in self.last:
+            lager.lagerstatus.drop(lager.lagerstatus[lager.lagerstatus['Paket_id'] == x].index, inplace = True)
+        lager.lagerstatus.reset_index(drop=True, inplace=True)
+        return lager.lagerstatus, self.förtjänst
+        

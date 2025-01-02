@@ -4,8 +4,8 @@ class Lager:
     
     def __init__(self, csv_name: str):
         self.lagerstatus = pd.read_csv(csv_name)
-        self.vikt = self.lagerstatus['Vikt'].sum()
-        self.förtjänst = self.lagerstatus['Förtjänst'].sum()
+        self.vikt = round(self.lagerstatus['Vikt'].sum(), 1)
+        self.förtjänst = int(self.lagerstatus['Förtjänst'].sum())
         self.dagensförtjänst = 0
         
     def updatera(self, lagerstatus: pd.DataFrame, dagensförtjänst):
@@ -15,8 +15,8 @@ class Lager:
             self.vikt = 0
             self.förtjänst = 0
         else:
-            self.vikt = self.lagerstatus['Vikt'].sum()
-            self.förtjänst = self.lagerstatus['Förtjänst'].sum()
+            self.vikt = round(self.lagerstatus['Vikt'].sum(), 1)
+            self.förtjänst = int(self.lagerstatus['Förtjänst'].sum())
             
     def antal_paket(self):
         return self.lagerstatus.shape[0]
