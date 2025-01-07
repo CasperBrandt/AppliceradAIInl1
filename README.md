@@ -3,11 +3,11 @@ I main.py filen rad 9 är det kod som är utkommenterad, om man vill skapa en la
 För att köra programmet är det bara att kolla vilken algortim man vill använda sig av i main filen och sedan kommentera ut den andra (rad21-22 eller rad 24-26) och sedan starta
 
 I genetic.py finns det lite variabler man kan ändra på såsom:
-CAPACITY
-POPULATION_SIZE
-GENERATIONS
-MUTATION_RATE
-MAX_MUTATIONS
+## CAPACITY
+## POPULATION_SIZE
+## GENERATIONS
+## MUTATION_RATE
+## MAX_MUTATIONS
 
 I main.py kan man ändra antalet lastbilar som ska lastas
 
